@@ -12,23 +12,24 @@ Wobei:
 
 - $p = -i hbar diff_z$
 - $bold(sigma)$ ... Pauli Matrizen $sigma_1 = mat(0,1;1,0)$, $sigma_2 = mat(0,-i;i,0)$, $sigma_3 = mat(1,0;0,-1)$
-
-Wir simulieren in 1D. Das Koordinatensystem wird so gwählt, dass B ausschliesslich in y Richtung zeigt. Damit lässt sich das magnetische Vektorpotenzial A recht einfach wählen als $ A_x (z) = integral_(z_min)^z B_y (z) dif x $
+#let ex = $arrow(e_x)$
+#let ey = $arrow(e_y)$
+#let ez = $arrow(e_z)$
+Wir simulieren in 1D. Das Koordinatensystem wird so gewählt, dass B ausschliesslich in y Richtung zeigt. Damit lässt sich das magnetische Vektorpotenzial A recht einfach wählen als $ A(z) ex = integral_(z_min)^z B (z)  ey dif z $
 
 Es wird nur eine Komponente von $bold(sigma)$ benötigt, da $bold(sigma) dot B = sigma_2 B_y$.
 
 Diese Gleichung wird nun diskretisiert:
 
 
-$ i hbar diff_t phi &=  1/(2m)[(-i hbar diff_x)^2+ 2 (-i hbar diff_x) q A - (q A)^2 - g q hbar bold(sigma) dot B] phi \
- i hbar diff_t phi &=  1/(2m)[- hbar^2 diff_x^2 phi - 2i hbar q A diff_x phi - (q A)^2 phi - g q hbar bold(sigma)_2 B phi] \ 
- i hbar diff_t phi &=  1/(2m)[- hbar^2 (phi_(x-1)-2 phi_x + phi_(x+1))/(Delta x)^2 - 2 i hbar q A_x (phi_(x+1)-phi_(x-1))/(2 Delta x)- (q A_x)^2 phi_x - g q hbar bold(sigma)_2 B phi_x] \ 
- i hbar diff_t phi &= 
- 1/(2m)[(-hbar^2/(Delta x)^2+i hbar q A_x / (Delta x))phi_(x-1) + 
- (-hbar^2/(Delta x)^2-i hbar q A_x / (Delta x) )phi_(x+1) + 
- (2 hbar^2/(Delta x)^2 - g q hbar sigma_2 B)] \ 
+$ i hbar diff_t phi &=  1/(2m)[(-i hbar diff_z ez)^2- 2 (-i hbar diff_z ez) q (A ex) + (q A ex)^2 - g q hbar bold(sigma) dot B] phi \
+ i hbar diff_t phi &=  1/(2m)[- hbar^2 diff_z^2 phi + (q A)^2 phi - g q hbar bold(sigma)_2 B phi] \ 
+ i hbar diff_t phi &=  1/(2m)[- hbar^2 (phi_(z+1)-2 phi_z + phi_(z-1))/(Delta z)^2 + (q A_z)^2 phi_z - g q hbar bold(sigma)_2 B phi_z] \ 
+
 $
-Dabei ist zu berücksichtigen dass $phi$ ein spinor ist also $phi = vec(phi arrow.t, phi arrow.b )$
+Dabei ist zu berücksichtigen dass $phi$ ein Spinor ist also $phi = vec(phi arrow.t, phi arrow.b )$
+
+/*
 Daher wurde die Gleichung wie folgt in Matrixschreibweise diskretisiert:
 #pagebreak()
 #set page("a4",flipped: true)
@@ -75,3 +76,4 @@ Wenn ich einen "reinen" up zustand mit einem "reinen" down zustand multipliziere
 
 Um die Lösung für ein Partikel zu erhalten, habe ich über die andere (absolut-quadrierte) Komponente integriert:
 $ |phi(x_1)|^2 = integral |phi(x_1,x_2)|^2 dif x_2$
+*/

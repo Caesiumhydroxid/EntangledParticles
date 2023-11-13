@@ -5,28 +5,28 @@ from scipy.integrate import solve_ivp
 from matplotlib.animation import FuncAnimation
 
 x_min = -1e-7
-x_max = 1e-7
+x_max = 5e-7
 B0 = 1
+N = 5001
 xs = np.linspace(x_min,x_max,N)
 
-gaussian = generateGaussianWavePacket(xs,-5e-8,5e-9,9e8)
-gaussian2 = generateGaussianWavePacket(xs,0,1e-9,-3e9)
-As = generateMagneticVectorPotential(xs,B0,0.5e-8,1e-8)
-print(As)
-plt.plot(xs,As)
-plt.savefig("potential.svg")
+gaussian = generateGaussianWavePacket(xs,-5e-8,5e-9,15e8)
+As,Bs = generateMagneticVectorPotential(xs,B0,0.5e-8,5e-7)
+
+
 
 gaussianTogether = np.zeros(len(gaussian)*2, dtype=complex)
 for i in range(len(gaussian)):
-    gaussianTogether[2*i] = gaussian[i]
-    #gaussianTogether[2*i+1] = gaussian2[i]
+    gaussianTogether[2*i] = 1/np.sqrt(2) * gaussian[i]
+    gaussianTogether[2*i+1] = 1/np.sqrt(2) * gaussian[i]
 
-H = hamiltonian(xs,As)
+delta = xs[1]-xs[0]
+H = hamiltonian(xs,delta,As)
 
 def f(t, phi):
     return 1/(1j*constants.hbar) * (H @ phi)
 
-tmax = 15e-13
+tmax = 50e-13
 sol = solve_ivp(f, [0, tmax], gaussianTogether,  t_eval=np.linspace(0,tmax,100), method='DOP853')
 
 
@@ -48,9 +48,9 @@ ax2.title.set_text("Spin Down")
 
 # Initialize an empty point for the plot
 point1, = ax1.plot(xs, np.real(sol.y[:,int(10)][0::2]))
-ax1.plot(xs, As*1e14)
+ax1.plot(xs, Bs*1e7)
 point2, = ax2.plot(xs, np.real(sol.y[:,int(10)][1::2]))
-ax2.plot(xs, As*1e14)
+ax2.plot(xs, Bs*1e7)
 #Plot on second y axis
 
 
@@ -69,6 +69,6 @@ def update(frame):
     return point1, point2
 
 ani = FuncAnimation(fig, update, frames=len(sol.y[0]), init_func=init, blit=True,interval=1/60*1000)
-ani.save(f"testSimplN{N}_B{B0}.gif")
+ani.save(f"bothSpinDirectionsN{N}_B{B0}.gif")
 
 plt.show()
